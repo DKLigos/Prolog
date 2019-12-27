@@ -1,0 +1,3 @@
+great(_, [], 0):-!.
+great(N,[H|Q],X):-H>N,great(N,Q,X1),X is X1+1.
+great(N,[H|Q],X):- H=< N, great(N,Q,X).

@@ -1,0 +1,46 @@
+great(_, [], 0):-!. %Выводит числа > заданного N
+great(N,[H|Q],X):-H>N,great(N,Q,X1),X is X1+1.
+great(N,[H|Q],X):- H=< N, great(N,Q,X).
+
+%Попытка подсчитать заданное число
+%
+find_it(_,[],0).
+find_it(Head, [Head|Tail],N):-find_it(Head, [Head|Tail],N1), N is N1+1.
+find_it(Head, [_|Tail],N) :- find_it(Head, Tail,N).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%Считает кол-во вхождений слов (Не мое)
+co(X,L) :- co(X,[],L).
+co([],A,A).
+co([X|Xs], A, L) :-p(X-Z,A,R), !, Z1 is Z+1, co(Xs,[X-Z1|R], L).
+co([X|Xs], A, L) :- co(Xs, [X-1|A], L).
+
+p(X-Y,[X-Y|R],R):- !.
+p(X,[H|Y],[H|Z]):- p(X,Y,Z).
+
+
+
+
+
+
+
+
+
+
+
+
+
+

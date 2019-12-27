@@ -1,0 +1,43 @@
+color black/cyan yellow/cyan
+timeout 10
+
+#graphicsmode 0x6A
+graphicsmode -1 640 480:800 24:32 || graphicsmode -1
+## Menu AutoNumber
+write 0x8274 0x2001
+
+#graphicsmode -1 800:640 -1 24:32 || graphicsmode -1
+#font /unifont.hex.gz
+
+
+#clear mappings and set root in case we return from bootmgr
+map --unmap=0:0xff
+map --unhook
+map --rehook
+ls /usbdrive.tag > nul || find --set-root --devices=hf /usbdrive.tag > nul
+ls /default > nul && default /default
+
+
+
+title ubuntu-19.04-desktop-amd64 from partition 0
+map --unmap=0:0xff
+map --unhook && map --rehook
+cat --hex --locate=PoLPu@ (md)0x3D0+0x130 > nul && echo Cannot continue if PLoP is active, please start this entry without loading PLoP first && echo && pause Press any key to return to the main menu && configfile /menu.lst
+set /a dev=*0x8280&0xff
+root (%dev%,0)
+set ISO=/ISO/ubuntu-19_04-desktop-amd64.iso
+ls %ISO% > nul || find --set-root --devices=hf /usbdrive.tag|| echo Error! Could not find usbdrive.tag && echo  && pause Press any key to return to the main menu && configfile /menu.lst
+ls %ISO% > nul || find --set-root --devices=hf %ISO% || echo Error! Could not find %ISO% && echo  && pause Press any key to return to the main menu && configfile /menu.lst
+map %ISO% (0xff) || map --heads=0 --sectors-per-track=0 %ISO% (0xff) || echo FATAL ERROR mapping %ISO%, please check if file is present and defragmented && pause Press any key to return to main menu && configfile /menu.lst
+#http://reboot.pro/topic/9916-grub4dos-isohybrided/page-2#entry88531
+#http://www.rmprepusb.com/tutorials/tails
+set /a dev=*0x82a0&0xff
+debug 1
+parttype (%dev%,3) | set check=
+debug off
+set check=%check:~-5,4%
+if "%check%"=="0x00" partnew (%dev%,3) 0 0 0 && partnew (%dev%,3) 0x00 %ISO%
+if not "%check%"=="0x00" echo WARNING: PARTITION TABLE 4 IN BIOS DEVICE %dev% IS ALREADY IN USE! && echo  && echo To prevent possible data loss will not continue further && pause && configfile /menu.lst
+map --rehook
+root (0xff)
+chainloader (0xff)

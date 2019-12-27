@@ -1,0 +1,13 @@
+  add(E,[],[E]).
+  add(E,[H|T],[H|T1]):-add(E,T,T1).
+
+z([],_):-!.
+z([H|T],[L]):-
+    find(H,[H|T],R,N),N>3,
+    add(H,R,T),!.
+
+find(_,[],0,0):-!.
+find(E,[E|T],R,N):-
+        find(E,T,R,N1),
+        N is N1+1,!.
+find(E,[E|T],R,N):-find(E,T,R,N).

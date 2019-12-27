@@ -1,0 +1,17 @@
+my_append([],R,R):-!.
+my_append([H|T],L,[H|R]):-my_append(T,L,R).
+
+stroka(X,Y):- split_string(_, ".", "",Y),stroka(H,L,R).
+stroka([H|Y],L,R2):-stroka(Y,L,R2), my_append([H],R2,R1),write(R1).
+
+
+
+
+
+
+
+
+
+
+
+
